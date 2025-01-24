@@ -30,7 +30,7 @@ func (service *ImageService) RemoveBackground(img image.Image) *image.RGBA {
 			// Calculate perceived brightness using standard coefficients
 			brightness := 0.2126*rr + 0.7152*gg + 0.0722*bb
 
-			alpha := uint8(255)
+			alpha := uint8(brightness)
 			if brightness < 0 {
 				alpha = 0
 			}
