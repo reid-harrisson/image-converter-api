@@ -16,7 +16,7 @@ info:
   title: Image Converter API
   version: "1.0"
 paths:
-  /image:
+  /image/{back_color}/{fore_color}:
     post:
       consumes:
       - multipart/form-data
@@ -27,15 +27,15 @@ paths:
         name: file
         required: true
         type: file
-      - default: '#000000'
+      - default: "000000"
         description: Background Color
-        in: query
+        in: path
         name: back_color
         required: true
         type: string
-      - default: '#FFFFFF'
+      - default: FFFFFF
         description: Foreground Color
-        in: query
+        in: path
         name: fore_color
         required: true
         type: string
