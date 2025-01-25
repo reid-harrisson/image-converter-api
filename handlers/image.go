@@ -97,6 +97,9 @@ func (handler *ImageHandler) Convert(context *fiber.Ctx) error {
 	}
 
 	// Process validation request
+	log.Println(context.Query("back_color"))
+	log.Println(context.Query("fore_color"))
+
 	backColor := utils.NewRGB(context.Query("back_color"))
 	foreColor := utils.NewRGB(context.Query("fore_color"))
 
