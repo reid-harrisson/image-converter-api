@@ -1,4 +1,61 @@
+basePath: /api/v1/
+definitions:
+  responses.Error:
+    properties:
+      error:
+        type: string
+    type: object
+  responses.Message:
+    properties:
+      message:
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+  description: RESTful API endpoints for Image Conversion
+  title: Image Converter API
+  version: "1.0"
+paths:
+  /image:
+    post:
+      consumes:
+      - multipart/form-data
+      - ' application/json'
+      description: Convert an image to a specified format
+      parameters:
+      - description: Image file to convert
+        in: formData
+        name: file
+        required: true
+        type: file
+      - default: '#000000'
+        description: Background Color
+        in: query
+        name: back_color
+        required: true
+        type: string
+      - default: '#FFFFFF'
+        description: Foreground Color
+        in: query
+        name: fore_color
+        required: true
+        type: string
+      produces:
+      - multipart/form-data
+      responses:
+        "201":
+          description: Conversion successful
+          schema:
+            $ref: '#/definitions/responses.Message'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Convert an image
+      tags:
+      - Image
 swagger: "2.0"

@@ -14,17 +14,97 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/image": {
+            "post": {
+                "description": "Convert an image to a specified format",
+                "consumes": [
+                    "multipart/form-data",
+                    " application/json"
+                ],
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Image"
+                ],
+                "summary": "Convert an image",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Image file to convert",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "#000000",
+                        "description": "Background Color",
+                        "name": "back_color",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "#FFFFFF",
+                        "description": "Foreground Color",
+                        "name": "fore_color",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Conversion successful",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "responses.Error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.Message": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
-	BasePath:         "",
+	BasePath:         "/api/v1/",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Image Converter API",
+	Description:      "RESTful API endpoints for Image Conversion",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
