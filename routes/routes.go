@@ -17,7 +17,7 @@ func ConfigRoutes(server *server.Server) {
 
 	imageHandler := handlers.CreateImageHandler()
 	imageGroup := apiV1.Group("/image")
-	imageGroup.Post("", imageHandler.Convert)
+	imageGroup.Post("/:back_color/:fore_color", imageHandler.Convert)
 }
 
 func redirectToSwagger(context *fiber.Ctx) error {

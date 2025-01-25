@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/image": {
+        "/image/{back_color}/{fore_color}": {
             "post": {
                 "description": "Convert an image to a specified format",
                 "consumes": [
@@ -38,18 +38,18 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "default": "#000000",
+                        "default": "000000",
                         "description": "Background Color",
                         "name": "back_color",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "default": "#FFFFFF",
+                        "default": "FFFFFF",
                         "description": "Foreground Color",
                         "name": "fore_color",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],

@@ -83,12 +83,12 @@ func sendImage(context *fiber.Ctx, convertedImage image.Image) error {
 // @Accept multipart/form-data
 // @Produce image/png
 // @Param file formData file true "Image file to convert"
-// @Param back_color query string true "Background Color" default(#000000)
-// @Param fore_color query string true "Foreground Color" default(#FFFFFF)
+// @Param back_color path string true "Background Color" default(000000)
+// @Param fore_color path string true "Foreground Color" default(FFFFFF)
 // @Success 201 {object} responses.Message "Conversion successful"
 // @Failure 400 {object} responses.Error "Invalid request"
 // @Failure 500 {object} responses.Error "Internal server error"
-// @Router /image [post]
+// @Router /image/{back_color}/{fore_color} [post]
 func (handler *ImageHandler) Convert(context *fiber.Ctx) error {
 	// Load source images
 	sourceImage, err := loadImageFromFile(context)
@@ -96,14 +96,14 @@ func (handler *ImageHandler) Convert(context *fiber.Ctx) error {
 		return err
 	}
 
-	log.Println(context.Queries())
+	log.Println(context.AllParams())
 
 	// Process validation request
-	log.Println(context.Query("back_color"))
-	log.Println(context.Query("fore_color"))
+	log.Println(context.Params("back_color"))
+	log.Println(context.Params("fore_color"))
 
-	backColor := utils.NewRGB(context.Query("back_color"))
-	foreColor := utils.NewRGB(context.Query("fore_color"))
+	backColor := utils.NewRGB(context.Params("back_color"))
+	foreColor := utils.NewRGB(context.Params("fore_color"))
 
 	log.Println(backColor)
 	log.Println(foreColor)
