@@ -4,14 +4,13 @@ package handlers
 // Import necessary packages for handling HTTP requests, responses, and services
 import (
 	"bytes"
-	"fmt"
 	"image"
-	"image-converter/requests"
 	responses "image-converter/responses"
 	"image-converter/services"
 	"image-converter/utils"
 	"image/jpeg"
 	"image/png"
+	"log"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -36,6 +35,8 @@ func loadImageFromFile(context *fiber.Ctx) (image.Image, error) {
 
 	// Check the content type of the uploaded file
 	contentType := fileHeader.Header.Get("Content-Type")
+
+	log.Println(contentType)
 
 	// Open the uploaded imageFile
 	imageFile, err := fileHeader.Open()
@@ -75,28 +76,6 @@ func sendImage(context *fiber.Ctx, convertedImage image.Image) error {
 	return context.Status(http.StatusOK).Send(buf.Bytes())
 }
 
-func processRequest(context *fiber.Ctx) (utils.RGB, utils.RGB, error) {
-	// Parse request body into AccountRequest struct
-	request := requests.ImageRequest{}
-	if err := context.BodyParser(&request); err != nil {
-		return utils.RGB{}, utils.RGB{}, responses.ErrorResponse(context, http.StatusBadRequest, "Invalid request")
-	}
-
-	fmt.Println("request:", request)
-
-	// Validate the request data
-	if err := request.Validate(); err != nil {
-		return utils.RGB{}, utils.RGB{}, responses.ErrorResponse(context, http.StatusBadRequest, "Validation failed")
-	}
-
-	fmt.Println("request:", request)
-
-	backColor := utils.NewRGB(request.BackColor)
-	foreColor := utils.NewRGB(request.ForeColor)
-
-	return backColor, foreColor, nil
-}
-
 // ConvertImage godoc
 // @Summary Convert an image
 // @Description Convert an image to a specified format
@@ -120,6 +99,9 @@ func (handler *ImageHandler) Convert(context *fiber.Ctx) error {
 	// Process validation request
 	backColor := utils.NewRGB(context.Query("back_color"))
 	foreColor := utils.NewRGB(context.Query("fore_color"))
+
+	log.Println(backColor)
+	log.Println(foreColor)
 
 	// Process the image to remove the background
 	convertedImage := handler.ImageService.RemoveBackground(sourceImage, backColor, foreColor)
