@@ -4,6 +4,7 @@ import (
 	"image"
 	"image-converter/utils"
 	"image/color"
+	"log"
 	"math"
 )
 
@@ -29,6 +30,11 @@ func (service *ImageService) RemoveBackground(img image.Image, back utils.RGB, f
 
 	totalDiff := colorSumC(fore) - colorSumC(back)
 
+	log.Println(bounds)
+	log.Println(totalDiff)
+
+	sum := 0.0
+
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			pixelColor := img.At(x, y)
@@ -43,6 +49,8 @@ func (service *ImageService) RemoveBackground(img image.Image, back utils.RGB, f
 			currentDiff := colorSum3(realR, realG, realB) - colorSumC(back)
 
 			value := math.Floor(currentDiff * realA / totalDiff)
+
+			sum += value
 
 			if value > 255 {
 				value = 255
@@ -63,6 +71,8 @@ func (service *ImageService) RemoveBackground(img image.Image, back utils.RGB, f
 			convertedImage.Set(x, y, newColor)
 		}
 	}
+
+	log.Println(sum)
 
 	return convertedImage
 }
