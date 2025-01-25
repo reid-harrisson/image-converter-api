@@ -20,7 +20,6 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      - ' application/json'
       description: Convert an image to a specified format
       parameters:
       - description: Image file to convert
@@ -41,7 +40,7 @@ paths:
         required: true
         type: string
       produces:
-      - multipart/form-data
+      - image/png
       responses:
         "201":
           description: Conversion successful

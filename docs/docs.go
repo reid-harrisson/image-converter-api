@@ -19,11 +19,10 @@ const docTemplate = `{
             "post": {
                 "description": "Convert an image to a specified format",
                 "consumes": [
-                    "multipart/form-data",
-                    " application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
-                    "multipart/form-data"
+                    "image/png"
                 ],
                 "tags": [
                     "Image"
