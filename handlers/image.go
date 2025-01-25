@@ -101,8 +101,8 @@ func processRequest(context *fiber.Ctx) (utils.RGB, utils.RGB, error) {
 // @Summary Convert an image
 // @Description Convert an image to a specified format
 // @Tags Image
-// @Accept multipart/form-data, application/json
-// @Produce multipart/form-data
+// @Accept multipart/form-data
+// @Produce image/png
 // @Param file formData file true "Image file to convert"
 // @Param back_color query string true "Background Color" default(#000000)
 // @Param fore_color query string true "Foreground Color" default(#FFFFFF)
