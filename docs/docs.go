@@ -38,13 +38,20 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Conversion configuration details",
-                        "name": "params",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.ImageRequest"
-                        }
+                        "type": "string",
+                        "default": "#000000",
+                        "description": "Background Color",
+                        "name": "back_color",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "#FFFFFF",
+                        "description": "Foreground Color",
+                        "name": "fore_color",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -71,19 +78,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "requests.ImageRequest": {
-            "type": "object",
-            "properties": {
-                "back_color": {
-                    "type": "string",
-                    "example": "#000000"
-                },
-                "fore_color": {
-                    "type": "string",
-                    "example": "#FFFFFF"
-                }
-            }
-        },
         "responses.Error": {
             "type": "object",
             "properties": {

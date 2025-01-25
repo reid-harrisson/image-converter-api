@@ -2,7 +2,9 @@ package services
 
 import (
 	"image"
+	"image-converter/utils"
 	"image/color"
+	"math"
 )
 
 type ImageService struct {
@@ -13,38 +15,54 @@ func CreateImageService() *ImageService {
 	return &ImageService{}
 }
 
-func (service *ImageService) RemoveBackground(img image.Image) *image.RGBA {
+func colorSumC(color utils.RGB) float64 {
+	return 0.2126*float64(color.R) + 0.7152*float64(color.G) + 0.0722*float64(color.B)
+}
+
+func colorSum3(r float64, g float64, b float64) float64 {
+	return 0.2126*r + 0.7152*g + 0.0722*b
+}
+
+func (service *ImageService) RemoveBackground(img image.Image, back utils.RGB, fore utils.RGB) *image.RGBA {
 	bounds := img.Bounds()
-	newImg := image.NewRGBA(bounds)
+	convertedImage := image.NewRGBA(bounds)
+
+	totalDiff := colorSumC(fore) - colorSumC(back)
 
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			c := img.At(x, y)
-			r, g, b, _ := c.RGBA()
+			pixelColor := img.At(x, y)
+			pureR, pureG, pureB, pureA := pixelColor.RGBA()
 
 			// Convert 16-bit color values to 8-bit
-			rr := float64(r) * 255 / 65535
-			gg := float64(g) * 255 / 65535
-			bb := float64(b) * 255 / 65535
+			realR := float64(pureR) * 255 / 65535
+			realG := float64(pureG) * 255 / 65535
+			realB := float64(pureB) * 255 / 65535
+			realA := float64(pureA) * 255 / 65535
 
-			// Calculate perceived brightness using standard coefficients
-			brightness := 0.2126*rr + 0.7152*gg + 0.0722*bb
+			currentDiff := colorSum3(realR, realG, realB) - colorSumC(back)
 
-			alpha := uint8(brightness)
-			if brightness < 0 {
-				alpha = 0
+			value := math.Floor(currentDiff * realA / totalDiff)
+
+			if value > 255 {
+				value = 255
 			}
+			if value < 0 {
+				value = 0
+			}
+
+			alpha := uint8(value)
 
 			newColor := color.NRGBA{
-				R: 255,   // Red component
-				G: 255,   // Green component
-				B: 255,   // Blue component
-				A: alpha, // Alpha channel based on brightness
+				R: fore.R, // Red component
+				G: fore.G, // Green component
+				B: fore.B, // Blue component
+				A: alpha,  // Alpha channel based on brightness
 			}
 
-			newImg.Set(x, y, newColor)
+			convertedImage.Set(x, y, newColor)
 		}
 	}
 
-	return newImg
+	return convertedImage
 }

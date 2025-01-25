@@ -1,14 +1,5 @@
 basePath: /api/v1/
 definitions:
-  requests.ImageRequest:
-    properties:
-      back_color:
-        example: '#000000'
-        type: string
-      fore_color:
-        example: '#FFFFFF'
-        type: string
-    type: object
   responses.Error:
     properties:
       error:
@@ -37,12 +28,18 @@ paths:
         name: file
         required: true
         type: file
-      - description: Conversion configuration details
-        in: body
-        name: params
+      - default: '#000000'
+        description: Background Color
+        in: query
+        name: back_color
         required: true
-        schema:
-          $ref: '#/definitions/requests.ImageRequest'
+        type: string
+      - default: '#FFFFFF'
+        description: Foreground Color
+        in: query
+        name: fore_color
+        required: true
+        type: string
       produces:
       - multipart/form-data
       responses:
