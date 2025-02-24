@@ -18,6 +18,10 @@ func ConfigRoutes(server *server.Server) {
 	imageHandler := handlers.CreateImageHandler()
 	imageGroup := apiV1.Group("/image")
 	imageGroup.Post("/:back_color/:fore_color", imageHandler.Convert)
+
+	analyticHandler := handlers.CreateAnalyticHandler()
+	analyticGroup := apiV1.Group("/analytic")
+	analyticGroup.Post("", analyticHandler.Analyse)
 }
 
 func redirectToSwagger(context *fiber.Ctx) error {
