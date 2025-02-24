@@ -15,6 +15,50 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/analytic": {
+            "post": {
+                "description": "Analyse an image",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "Image"
+                ],
+                "summary": "Analyse an image",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Image file to analyse",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Conversion successful",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Analytic"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/image/{back_color}/{fore_color}": {
             "post": {
                 "description": "Convert an image to a specified format",
@@ -77,6 +121,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "responses.Analytic": {
+            "type": "object",
+            "properties": {
+                "brightness": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "responses.Error": {
             "type": "object",
             "properties": {

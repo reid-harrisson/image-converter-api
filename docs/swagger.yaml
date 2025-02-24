@@ -1,5 +1,12 @@
 basePath: /api/v1/
 definitions:
+  responses.Analytic:
+    properties:
+      brightness:
+        additionalProperties:
+          type: integer
+        type: object
+    type: object
   responses.Error:
     properties:
       error:
@@ -16,6 +23,35 @@ info:
   title: Image Converter API
   version: "1.0"
 paths:
+  /analytic:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Analyse an image
+      parameters:
+      - description: Image file to analyse
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - image/png
+      responses:
+        "201":
+          description: Conversion successful
+          schema:
+            $ref: '#/definitions/responses.Analytic'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Analyse an image
+      tags:
+      - Image
   /image/{back_color}/{fore_color}:
     post:
       consumes:
