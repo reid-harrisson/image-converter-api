@@ -2,6 +2,7 @@ package services
 
 import (
 	"image"
+	"image-converter/utils"
 )
 
 type AnalyticService struct {
@@ -12,10 +13,10 @@ func CreateAnalyticService() *AnalyticService {
 	return &AnalyticService{}
 }
 
-func (service *AnalyticService) AnalyseImage(img image.Image) map[int]int {
+func (service *AnalyticService) AnalyseImage(img image.Image) map[int]utils.Analytic {
 	bounds := img.Bounds()
 
-	data := map[int]int{}
+	data := map[int]utils.Analytic{}
 
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
@@ -28,20 +29,43 @@ func (service *AnalyticService) AnalyseImage(img image.Image) map[int]int {
 			realB := float64(pureB) * 255 / 65535
 			_ = float64(pureA) * 255 / 65535
 
-			currentBrightness := colorSum3(realR, realG, realB) * 1000 / 255
-			data[int(currentBrightness)]++
+			brightness := int(colorSum3(realR, realG, realB) * 200 / 255)
+			datum, isExisted := data[brightness]
+			if !isExisted {
+				data[brightness] = utils.Analytic{
+					Count: 0,
+					Color: "",
+				}
+			}
+			data[brightness] = utils.Analytic{
+				Count: datum.Count + 1,
+				Color: utils.ColorToHex(pixelColor),
+			}
 		}
 	}
 
 	max := 0
-	for _, value := range data {
-		if max < value {
-			max = value
+	for _, datum := range data {
+		if max < datum.Count {
+			max = datum.Count + 1
 		}
 	}
 
-	for key, value := range data {
-		data[key] = value * 1000 / max
+	for i := 0; i < 200; i++ {
+		_, isExited := data[i]
+		if !isExited {
+			data[i] = utils.Analytic{
+				Count: 0,
+				Color: "",
+			}
+		}
+	}
+
+	for key, datum := range data {
+		data[key] = utils.Analytic{
+			Count: datum.Count * 200 / max,
+			Color: datum.Color,
+		}
 	}
 
 	return data
