@@ -12,3 +12,8 @@ func NewRGB(hex string) RGB {
 	fmt.Sscanf(hex, "%02X%02X%02X", &r, &g, &b)
 	return RGB{R: r, G: g, B: b}
 }
+
+type Analytic struct {
+	Count int
+	Color string
+}
